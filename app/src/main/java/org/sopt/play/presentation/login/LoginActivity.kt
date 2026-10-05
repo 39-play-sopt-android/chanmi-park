@@ -1,5 +1,6 @@
-package org.sopt.play
+package org.sopt.play.presentation.login
 
+import android.R.attr.name
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,17 +12,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import org.sopt.play.presentation.Greeting
 import org.sopt.play.ui.theme.PlaySoptTheme
 
-class MainActivity : ComponentActivity() {
+class LoginActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             PlaySoptTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
+                    LoginScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -31,17 +33,15 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun LoginScreen(
+    modifier: Modifier = Modifier
+) {
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     PlaySoptTheme {
-        Greeting("Android")
+        LoginScreen()
     }
 }
