@@ -23,8 +23,7 @@ fun PlayLabelTextField(
     placeholder: String,
     state: TextFieldState,
     modifier: Modifier = Modifier,
-    isError: Boolean = false,
-    errorMessage: String = "",
+    errorMessage: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onKeyboardAction: KeyboardActionHandler? = null,
     inputTransformation: InputTransformation? = null,
@@ -45,7 +44,7 @@ fun PlayLabelTextField(
         PlayTextField(
             state = state,
             placeholder = placeholder,
-            isError = isError,
+            isError = errorMessage.isNullOrBlank(),
             keyboardOptions = keyboardOptions,
             onKeyboardAction = onKeyboardAction,
             inputTransformation = inputTransformation,
@@ -53,7 +52,7 @@ fun PlayLabelTextField(
             interactionSource = interactionSource,
         )
 
-        if (isError){
+        if (!errorMessage.isNullOrBlank()){
             Text(
                 text = errorMessage,
                 modifier = Modifier.padding(horizontal = 8.dp),
