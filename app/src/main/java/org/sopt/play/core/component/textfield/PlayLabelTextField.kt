@@ -44,7 +44,7 @@ fun PlayLabelTextField(
         PlayTextField(
             state = state,
             placeholder = placeholder,
-            isError = errorMessage.isNullOrBlank(),
+            isError = !errorMessage.isNullOrBlank(),
             keyboardOptions = keyboardOptions,
             onKeyboardAction = onKeyboardAction,
             inputTransformation = inputTransformation,
