@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,25 +18,25 @@ import androidx.compose.ui.unit.dp
 import org.sopt.play.core.theme.PlaySoptTheme
 
 @Composable
-fun PlayBasicButton(
+fun PlayButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true,
+    isEnabled: Boolean = true,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clip(shape = CircleShape)
-            .background(color = if (enabled) PlaySoptTheme.colors.black else PlaySoptTheme.colors.gray1)
-            .clickable(enabled = enabled, onClick = onClick)
+            .background(color = if (isEnabled) PlaySoptTheme.colors.black else PlaySoptTheme.colors.gray1)
+            .clickable(enabled = isEnabled, onClick = onClick)
             .padding(vertical = 16.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = text,
-            color = if (enabled) PlaySoptTheme.colors.gray1 else PlaySoptTheme.colors.gray3,
+            color = if (isEnabled) PlaySoptTheme.colors.gray1 else PlaySoptTheme.colors.gray3,
             style = PlaySoptTheme.typography.sb14,
         )
     }
@@ -45,18 +44,18 @@ fun PlayBasicButton(
 
 @Preview(showBackground = true)
 @Composable
-private fun PlayBasicButtonPreview() {
+private fun PlayButtonPreview() {
     Column {
-        PlayBasicButton(
+        PlayButton(
             text = "로그인",
             onClick = {},
-            enabled = true
+            isEnabled = true
         )
 
-        PlayBasicButton(
+        PlayButton(
             text = "로그인",
             onClick = {},
-            enabled = false
+            isEnabled = false
         )
     }
 }
