@@ -1,4 +1,4 @@
-package org.sopt.play.presentation.login
+package org.sopt.play.presentation.signup
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -19,23 +19,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.play.core.component.button.PlayButton
 import org.sopt.play.core.component.textfield.PlayLabelTextField
-import org.sopt.play.core.component.textfield.PlayTextField
 import org.sopt.play.core.theme.PlaySoptTheme
+import org.sopt.play.presentation.Greeting
 
-class LoginActivity : ComponentActivity() {
+class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             PlaySoptTheme {
-                Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
-                    LoginScreen(
-                        onLoginClick = {},
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    SignUpScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -45,12 +43,13 @@ class LoginActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginScreen(
-    onLoginClick: () -> Unit,
-    modifier: Modifier = Modifier,
+fun SignUpScreen(
+    modifier: Modifier = Modifier
 ) {
+    val nameState = rememberTextFieldState(initialText = "")
     val emailState = rememberTextFieldState(initialText = "")
     val passwordState = rememberTextFieldState(initialText = "")
+    val passwordCheckState = rememberTextFieldState(initialText = "")
 
     Column(
         modifier = modifier
@@ -60,12 +59,20 @@ fun LoginScreen(
             .background(color = PlaySoptTheme.colors.white)
     ) {
         Text(
-            text = "이메일로 로그인하기",
+            text = "이메일로 회원가입",
             color = PlaySoptTheme.colors.black,
             style = PlaySoptTheme.typography.b28,
         )
 
         Spacer(modifier = Modifier.height(40.dp))
+
+        PlayLabelTextField(
+            labelText = "이름",
+            placeholder ="홍길동",
+            state = nameState,
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
 
         PlayLabelTextField(
             labelText = "이메일 주소",
@@ -81,34 +88,21 @@ fun LoginScreen(
             state = passwordState,
         )
 
+        Spacer(modifier = Modifier.height(32.dp))
+
+        PlayLabelTextField(
+            labelText = "비밀번호 확인",
+            placeholder ="6자 이상의 비밀번호",
+            state = passwordCheckState,
+        )
+
         Spacer(modifier = Modifier.height(40.dp))
 
         PlayButton(
-            text = "로그인",
-            onClick = onLoginClick,
+            text = "회원가입",
+            onClick = {  },
             isEnabled = if(emailState.text.isNotBlank() && passwordState.text.isNotBlank()) true else false,
         )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                text = "아직 계정이 없으신가요?",
-                color = PlaySoptTheme.colors.gray3,
-                style = PlaySoptTheme.typography.m14,
-            )
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Text(
-                text = "회원가입하기",
-                color = PlaySoptTheme.colors.gray6,
-                style = PlaySoptTheme.typography.m14,
-            )
-        }
     }
 }
 
@@ -116,8 +110,6 @@ fun LoginScreen(
 @Composable
 fun GreetingPreview() {
     PlaySoptTheme {
-        LoginScreen(
-            onLoginClick = {}
-        )
+        SignUpScreen()
     }
 }
