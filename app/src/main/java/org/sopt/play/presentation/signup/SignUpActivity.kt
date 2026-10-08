@@ -1,6 +1,5 @@
 package org.sopt.play.presentation.signup
 
-import android.R.attr.name
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
@@ -22,10 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -108,7 +103,7 @@ private fun SignUpScreen(
             labelText = "이메일 주소",
             placeholder ="abc@email.com",
             state = emailState,
-            errorMessage = if(emailState.text.isNotBlank() && !isEmailValid) "올바른 이메일을 입력해주세요." else null,
+            errorMessage = if(emailState.text.isNotEmpty() && !isEmailValid) "올바른 이메일을 입력해주세요." else null,
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -117,7 +112,7 @@ private fun SignUpScreen(
             labelText = "비밀번호",
             placeholder ="6자 이상의 비밀번호",
             state = passwordState,
-            errorMessage = if(passwordState.text.isNotBlank() && !isPasswordValid) "비밀번호는 6자 이상 입력해주세요." else null,
+            errorMessage = if(passwordState.text.isNotEmpty() && !isPasswordValid) "비밀번호는 6자 이상 입력해주세요." else null,
             outputTransformation = OutputTransformation { replace(0, length, "•".repeat(length)) },
         )
 
@@ -127,7 +122,7 @@ private fun SignUpScreen(
             labelText = "비밀번호 확인",
             placeholder ="6자 이상의 비밀번호",
             state = passwordCheckState,
-            errorMessage = if(passwordCheckState.text.isNotBlank() && !isPasswordCheckValid) "비밀번호와 동일하게 입력해주세요." else null,
+            errorMessage = if(passwordCheckState.text.isNotEmpty() && !isPasswordCheckValid) "비밀번호와 동일하게 입력해주세요." else null,
             outputTransformation = OutputTransformation { replace(0, length, "•".repeat(length)) },
         )
 

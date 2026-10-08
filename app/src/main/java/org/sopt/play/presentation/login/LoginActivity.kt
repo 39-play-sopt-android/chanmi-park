@@ -1,6 +1,5 @@
 package org.sopt.play.presentation.login
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
@@ -8,9 +7,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.registerForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -52,7 +49,7 @@ class LoginActivity : ComponentActivity() {
     private val signUpLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
+        if (result.resultCode == RESULT_OK) {
             registeredEmail =
                 result.data?.getStringExtra("email") ?: ""
 
@@ -124,7 +121,7 @@ private fun LoginScreen(
             labelText = "이메일 주소",
             placeholder ="abc@email.com",
             state = emailState,
-            errorMessage = if(emailState.text.isNotBlank() && !isEmailValid) "올바른 이메일을 입력해주세요." else null,
+            errorMessage = if(emailState.text.isNotEmpty() && !isEmailValid) "올바른 이메일을 입력해주세요." else null,
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -133,7 +130,7 @@ private fun LoginScreen(
             labelText = "비밀번호",
             placeholder ="6자 이상의 비밀번호",
             state = passwordState,
-            errorMessage = if(passwordState.text.isNotBlank() && !isPasswordValid) "비밀번호는 6자 이상 입력해주세요." else null,
+            errorMessage = if(passwordState.text.isNotEmpty() && !isPasswordValid) "비밀번호는 6자 이상 입력해주세요." else null,
             outputTransformation = OutputTransformation { replace(0, length, "•".repeat(length)) }
         )
 
