@@ -52,6 +52,7 @@ fun PlaySoptTheme(
         }
 
         MaterialTheme(
+            colorScheme = PlayMaterialColorScheme,
             content = content
         )
     }
