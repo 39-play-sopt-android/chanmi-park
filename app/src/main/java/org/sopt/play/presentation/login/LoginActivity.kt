@@ -1,10 +1,13 @@
 package org.sopt.play.presentation.login
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,18 +17,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.play.core.component.button.PlayButton
 import org.sopt.play.core.component.textfield.PlayLabelTextField
-import org.sopt.play.core.component.textfield.PlayTextField
 import org.sopt.play.core.theme.PlaySoptTheme
+import org.sopt.play.presentation.signup.SignUpActivity
+import kotlin.jvm.java
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +40,10 @@ class LoginActivity : ComponentActivity() {
                 Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
                     LoginScreen(
                         onLoginClick = {},
+                        onSignupClick = {
+                            val intent = Intent(this, SignUpActivity::class.java)
+                            startActivity(intent)
+                        },
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -45,19 +53,23 @@ class LoginActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginScreen(
+private fun LoginScreen(
     onLoginClick: () -> Unit,
+    onSignupClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val emailState = rememberTextFieldState(initialText = "")
     val passwordState = rememberTextFieldState(initialText = "")
 
+    val isEmailValid = Patterns.EMAIL_ADDRESS.matcher(emailState.text).matches()
+    val isPasswordValid = passwordState.text.length >= 6
+
     Column(
         modifier = modifier
             .fillMaxSize()
+            .background(color = PlaySoptTheme.colors.white)
             .padding(horizontal = 16.dp)
             .padding(top = 60.dp)
-            .background(color = PlaySoptTheme.colors.white)
     ) {
         Text(
             text = "이메일로 로그인하기",
@@ -71,6 +83,7 @@ fun LoginScreen(
             labelText = "이메일 주소",
             placeholder ="abc@email.com",
             state = emailState,
+            errorMessage = if(emailState.text.isNotBlank() && !isEmailValid) "올바른 이메일을 입력해주세요." else null,
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -79,6 +92,8 @@ fun LoginScreen(
             labelText = "비밀번호",
             placeholder ="6자 이상의 비밀번호",
             state = passwordState,
+            errorMessage = if(passwordState.text.isNotBlank() && !isPasswordValid) "비밀번호는 6자 이상 입력해주세요." else null,
+            outputTransformation = OutputTransformation { replace(0, length, "•".repeat(length)) }
         )
 
         Spacer(modifier = Modifier.height(40.dp))
@@ -86,7 +101,7 @@ fun LoginScreen(
         PlayButton(
             text = "로그인",
             onClick = onLoginClick,
-            isEnabled = if(emailState.text.isNotBlank() && passwordState.text.isNotBlank()) true else false,
+            isEnabled = isEmailValid && isPasswordValid,
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -105,6 +120,7 @@ fun LoginScreen(
 
             Text(
                 text = "회원가입하기",
+                modifier = Modifier.clickable( onClick = onSignupClick ),
                 color = PlaySoptTheme.colors.gray6,
                 style = PlaySoptTheme.typography.m14,
             )
@@ -114,10 +130,11 @@ fun LoginScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun LoginScreenPreview() {
     PlaySoptTheme {
         LoginScreen(
-            onLoginClick = {}
+            onLoginClick = {},
+            onSignupClick = {},
         )
     }
 }
