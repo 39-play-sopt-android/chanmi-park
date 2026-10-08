@@ -1,20 +1,22 @@
 package org.sopt.play.presentation.signup
 
 import android.os.Bundle
+import android.util.Patterns
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import org.sopt.play.core.component.button.PlayButton
 import org.sopt.play.core.component.textfield.PlayLabelTextField
 import org.sopt.play.core.theme.PlaySoptTheme
-import org.sopt.play.presentation.Greeting
 
 class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +33,12 @@ class SignUpActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PlaySoptTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    contentWindowInsets = WindowInsets.safeDrawing,
+                ) { innerPadding ->
                     SignUpScreen(
+                        onSignUpClick = {},
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -43,20 +48,27 @@ class SignUpActivity : ComponentActivity() {
 }
 
 @Composable
-fun SignUpScreen(
-    modifier: Modifier = Modifier
+private fun SignUpScreen(
+    onSignUpClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val nameState = rememberTextFieldState(initialText = "")
     val emailState = rememberTextFieldState(initialText = "")
     val passwordState = rememberTextFieldState(initialText = "")
     val passwordCheckState = rememberTextFieldState(initialText = "")
 
+    val isNameValid = nameState.text.isNotBlank()
+    val isEmailValid = Patterns.EMAIL_ADDRESS.matcher(emailState.text).matches()
+    val isPasswordValid = passwordState.text.length >= 6
+    val isPasswordCheckValid = passwordState.text == passwordCheckState.text
+
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
-            .padding(top = 60.dp)
             .background(color = PlaySoptTheme.colors.white)
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp)
+            .padding(top = 60.dp, bottom = 16.dp)
     ) {
         Text(
             text = "이메일로 회원가입",
@@ -78,6 +90,7 @@ fun SignUpScreen(
             labelText = "이메일 주소",
             placeholder ="abc@email.com",
             state = emailState,
+            errorMessage = if(emailState.text.isNotBlank() && !isEmailValid) "올바른 이메일을 입력해주세요." else null,
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -86,6 +99,8 @@ fun SignUpScreen(
             labelText = "비밀번호",
             placeholder ="6자 이상의 비밀번호",
             state = passwordState,
+            errorMessage = if(passwordState.text.isNotBlank() && !isPasswordValid) "비밀번호는 6자 이상 입력해주세요." else null,
+            outputTransformation = OutputTransformation { replace(0, length, "•".repeat(length)) },
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -94,22 +109,26 @@ fun SignUpScreen(
             labelText = "비밀번호 확인",
             placeholder ="6자 이상의 비밀번호",
             state = passwordCheckState,
+            errorMessage = if(passwordCheckState.text.isNotBlank() && !isPasswordCheckValid) "비밀번호와 동일하게 입력해주세요." else null,
+            outputTransformation = OutputTransformation { replace(0, length, "•".repeat(length)) },
         )
 
         Spacer(modifier = Modifier.height(40.dp))
 
         PlayButton(
             text = "회원가입",
-            onClick = {  },
-            isEnabled = if(emailState.text.isNotBlank() && passwordState.text.isNotBlank()) true else false,
+            onClick = onSignUpClick,
+            isEnabled = isNameValid && isEmailValid && isPasswordValid && isPasswordCheckValid,
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+private fun GreetingPreview() {
     PlaySoptTheme {
-        SignUpScreen()
+        SignUpScreen(
+            onSignUpClick = {}
+        )
     }
 }

@@ -12,13 +12,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +41,10 @@ class LoginActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PlaySoptTheme {
-                Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    contentWindowInsets = WindowInsets.safeDrawing,
+                ) { innerPadding ->
                     LoginScreen(
                         onLoginClick = {},
                         onSignupClick = {
@@ -68,8 +75,9 @@ private fun LoginScreen(
         modifier = modifier
             .fillMaxSize()
             .background(color = PlaySoptTheme.colors.white)
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
-            .padding(top = 60.dp)
+            .padding(top = 60.dp, bottom = 16.dp)
     ) {
         Text(
             text = "이메일로 로그인하기",

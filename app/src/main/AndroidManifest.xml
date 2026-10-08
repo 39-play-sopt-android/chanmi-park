@@ -15,12 +15,14 @@
             android:name=".presentation.signup.SignUpActivity"
             android:exported="false"
             android:label="@string/title_activity_sign_up"
-            android:theme="@style/Theme.PlaySopt" />
+            android:theme="@style/Theme.PlaySopt"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".presentation.login.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login"
-            android:theme="@style/Theme.PlaySopt">
+            android:theme="@style/Theme.PlaySopt"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
