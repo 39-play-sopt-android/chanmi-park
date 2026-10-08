@@ -1,5 +1,7 @@
 package org.sopt.play.presentation.signup
 
+import android.R.attr.name
+import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import androidx.activity.ComponentActivity
@@ -20,12 +22,19 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.play.core.component.button.PlayButton
 import org.sopt.play.core.component.textfield.PlayLabelTextField
 import org.sopt.play.core.theme.PlaySoptTheme
+import org.sopt.play.presentation.login.LoginActivity
+import kotlin.jvm.java
 
 class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,8 +46,17 @@ class SignUpActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     contentWindowInsets = WindowInsets.safeDrawing,
                 ) { innerPadding ->
+                    val context = LocalContext.current
+
                     SignUpScreen(
-                        onSignUpClick = {},
+                        onSignUpClick = { email, password ->
+                            val resultIntent = Intent(context, LoginActivity::class.java).apply{
+                                putExtra("email",email)
+                                putExtra("password",password)
+                            }
+                            setResult(RESULT_OK, resultIntent)
+                            finish()
+                        },
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -49,7 +67,7 @@ class SignUpActivity : ComponentActivity() {
 
 @Composable
 private fun SignUpScreen(
-    onSignUpClick: () -> Unit,
+    onSignUpClick: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val nameState = rememberTextFieldState(initialText = "")
@@ -117,7 +135,7 @@ private fun SignUpScreen(
 
         PlayButton(
             text = "회원가입",
-            onClick = onSignUpClick,
+            onClick = { onSignUpClick(emailState.text.toString(), passwordState.text.toString()) },
             isEnabled = isNameValid && isEmailValid && isPasswordValid && isPasswordCheckValid,
         )
     }
@@ -128,7 +146,7 @@ private fun SignUpScreen(
 private fun GreetingPreview() {
     PlaySoptTheme {
         SignUpScreen(
-            onSignUpClick = {}
+            onSignUpClick = { _, _ -> }
         )
     }
 }

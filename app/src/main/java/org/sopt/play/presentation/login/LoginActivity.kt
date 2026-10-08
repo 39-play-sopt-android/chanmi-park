@@ -1,11 +1,16 @@
 package org.sopt.play.presentation.login
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.registerForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,16 +31,36 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.play.core.component.button.PlayButton
 import org.sopt.play.core.component.textfield.PlayLabelTextField
 import org.sopt.play.core.theme.PlaySoptTheme
+import org.sopt.play.presentation.MainActivity
 import org.sopt.play.presentation.signup.SignUpActivity
 import kotlin.jvm.java
 
 class LoginActivity : ComponentActivity() {
+
+    private var registeredEmail by mutableStateOf("")
+    private var registeredPassword by mutableStateOf("")
+
+    private val signUpLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            registeredEmail =
+                result.data?.getStringExtra("email") ?: ""
+
+            registeredPassword =
+                result.data?.getStringExtra("password") ?: ""
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -45,11 +70,19 @@ class LoginActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     contentWindowInsets = WindowInsets.safeDrawing,
                 ) { innerPadding ->
+
                     LoginScreen(
-                        onLoginClick = {},
+                        onLoginClick = {email, password ->
+                            if (email == registeredEmail && password == registeredPassword){
+                                val intent = Intent(this, MainActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            }
+                            else Toast.makeText(this, "이메일 또는 비밀번호가 올바르지 않아요.", Toast.LENGTH_SHORT).show()
+                        },
                         onSignupClick = {
                             val intent = Intent(this, SignUpActivity::class.java)
-                            startActivity(intent)
+                            signUpLauncher.launch(intent)
                         },
                         modifier = Modifier.padding(innerPadding)
                     )
@@ -61,7 +94,7 @@ class LoginActivity : ComponentActivity() {
 
 @Composable
 private fun LoginScreen(
-    onLoginClick: () -> Unit,
+    onLoginClick: (String, String) -> Unit,
     onSignupClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -108,7 +141,7 @@ private fun LoginScreen(
 
         PlayButton(
             text = "로그인",
-            onClick = onLoginClick,
+            onClick = { onLoginClick(emailState.text.toString(), passwordState.text.toString()) },
             isEnabled = isEmailValid && isPasswordValid,
         )
 
@@ -141,7 +174,7 @@ private fun LoginScreen(
 fun LoginScreenPreview() {
     PlaySoptTheme {
         LoginScreen(
-            onLoginClick = {},
+            onLoginClick = { _ , _ -> } ,
             onSignupClick = {},
         )
     }
