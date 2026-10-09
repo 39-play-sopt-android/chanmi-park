@@ -20,11 +20,14 @@ fun Modifier.addFocusCleaner(
     }
 }
 
-fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
-    clickable(indication = null,
-        interactionSource = remember {
-            MutableInteractionSource()
-        }) {
-        onClick()
-    }
+fun Modifier.noRippleClickable(
+    enabled: Boolean = true,
+    onClick: () -> Unit,
+): Modifier = composed {
+    clickable(
+        enabled = enabled,
+        indication = null,
+        interactionSource = remember { MutableInteractionSource() },
+        onClick = onClick,
+    )
 }

@@ -1,7 +1,6 @@
 package org.sopt.play.core.component.button
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.play.core.theme.PlaySoptTheme
+import org.sopt.play.core.util.noRippleClickable
 
 @Composable
 fun PlayButton(
@@ -29,7 +29,7 @@ fun PlayButton(
             .fillMaxWidth()
             .clip(shape = CircleShape)
             .background(color = if (isEnabled) PlaySoptTheme.colors.black else PlaySoptTheme.colors.gray1)
-            .clickable(enabled = isEnabled, onClick = onClick)
+            .noRippleClickable(enabled = isEnabled, onClick = onClick)
             .padding(vertical = 16.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,

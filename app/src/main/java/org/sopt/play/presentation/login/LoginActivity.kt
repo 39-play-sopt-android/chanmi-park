@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import org.sopt.play.core.component.button.PlayButton
 import org.sopt.play.core.component.textfield.PlayLabelTextField
 import org.sopt.play.core.theme.PlaySoptTheme
+import org.sopt.play.core.util.noRippleClickable
 import org.sopt.play.presentation.MainActivity
 import org.sopt.play.presentation.signup.SignUpActivity
 import kotlin.jvm.java
@@ -182,7 +183,7 @@ private fun LoginScreen(
 
             Text(
                 text = "회원가입하기",
-                modifier = Modifier.clickable( onClick = onSignupClick ),
+                modifier = Modifier.noRippleClickable( onClick = onSignupClick ),
                 color = PlaySoptTheme.colors.gray6,
                 style = PlaySoptTheme.typography.m14,
             )
