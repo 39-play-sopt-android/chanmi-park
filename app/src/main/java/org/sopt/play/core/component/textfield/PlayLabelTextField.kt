@@ -1,5 +1,9 @@
 package org.sopt.play.core.component.textfield
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,7 +35,7 @@ fun PlayLabelTextField(
     interactionSource: MutableInteractionSource? = null,
 ){
     Column(
-        modifier = modifier,
+        modifier = modifier.animateContentSize(),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Text(
@@ -52,15 +56,20 @@ fun PlayLabelTextField(
             interactionSource = interactionSource,
         )
 
-        if (!errorMessage.isNullOrBlank()){
+        AnimatedVisibility(
+            visible = !errorMessage.isNullOrBlank(),
+            enter = slideInVertically(initialOffsetY = { -it }),
+            exit = slideOutVertically(targetOffsetY = { -it }),
+        ) {
             Text(
-                text = errorMessage,
+                text = errorMessage.orEmpty(),
                 modifier = Modifier.padding(horizontal = 8.dp),
                 color = PlaySoptTheme.colors.red,
                 style = PlaySoptTheme.typography.m14,
             )
         }
     }
+
 }
 
 @Preview(showBackground = true)
