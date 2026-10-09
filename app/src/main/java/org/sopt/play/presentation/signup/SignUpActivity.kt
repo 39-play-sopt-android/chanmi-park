@@ -6,6 +6,7 @@ import android.util.Patterns
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
@@ -22,7 +24,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.play.core.component.button.PlayButton
@@ -60,6 +67,7 @@ class SignUpActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun SignUpScreen(
     onSignUpClick: (String, String) -> Unit,
@@ -74,6 +82,9 @@ private fun SignUpScreen(
     val isEmailValid = Patterns.EMAIL_ADDRESS.matcher(emailState.text).matches()
     val isPasswordValid = passwordState.text.length >= 6
     val isPasswordCheckValid = passwordState.text == passwordCheckState.text
+
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = modifier
@@ -95,6 +106,8 @@ private fun SignUpScreen(
             labelText = "이름",
             placeholder ="홍길동",
             state = nameState,
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+            onKeyboardAction = { focusManager.moveFocus(FocusDirection.Next) },
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -104,6 +117,11 @@ private fun SignUpScreen(
             placeholder ="abc@email.com",
             state = emailState,
             errorMessage = if(emailState.text.isNotEmpty() && !isEmailValid) "올바른 이메일을 입력해주세요." else null,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
+            onKeyboardAction = { focusManager.moveFocus(FocusDirection.Next) },
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -114,6 +132,11 @@ private fun SignUpScreen(
             state = passwordState,
             errorMessage = if(passwordState.text.isNotEmpty() && !isPasswordValid) "비밀번호는 6자 이상 입력해주세요." else null,
             outputTransformation = OutputTransformation { replace(0, length, "•".repeat(length)) },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Next,
+            ),
+            onKeyboardAction = { focusManager.moveFocus(FocusDirection.Next) },
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -124,6 +147,14 @@ private fun SignUpScreen(
             state = passwordCheckState,
             errorMessage = if(passwordCheckState.text.isNotEmpty() && !isPasswordCheckValid) "비밀번호와 동일하게 입력해주세요." else null,
             outputTransformation = OutputTransformation { replace(0, length, "•".repeat(length)) },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+            ),
+            onKeyboardAction = {
+                focusManager.clearFocus()
+                keyboardController?.hide()
+            },
         )
 
         Spacer(modifier = Modifier.height(40.dp))

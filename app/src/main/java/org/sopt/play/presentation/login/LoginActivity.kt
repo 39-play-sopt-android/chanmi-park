@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
@@ -32,6 +34,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.play.core.component.button.PlayButton
@@ -89,6 +96,7 @@ class LoginActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun LoginScreen(
     onLoginClick: (String, String) -> Unit,
@@ -100,6 +108,9 @@ private fun LoginScreen(
 
     val isEmailValid = Patterns.EMAIL_ADDRESS.matcher(emailState.text).matches()
     val isPasswordValid = passwordState.text.length >= 6
+
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = modifier
@@ -122,6 +133,11 @@ private fun LoginScreen(
             placeholder ="abc@email.com",
             state = emailState,
             errorMessage = if(emailState.text.isNotEmpty() && !isEmailValid) "올바른 이메일을 입력해주세요." else null,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
+            onKeyboardAction = { focusManager.moveFocus(FocusDirection.Next) },
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -131,7 +147,15 @@ private fun LoginScreen(
             placeholder ="6자 이상의 비밀번호",
             state = passwordState,
             errorMessage = if(passwordState.text.isNotEmpty() && !isPasswordValid) "비밀번호는 6자 이상 입력해주세요." else null,
-            outputTransformation = OutputTransformation { replace(0, length, "•".repeat(length)) }
+            outputTransformation = OutputTransformation { replace(0, length, "•".repeat(length)) },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+            ),
+            onKeyboardAction = {
+                focusManager.clearFocus()
+                keyboardController?.hide()
+            },
         )
 
         Spacer(modifier = Modifier.height(40.dp))
