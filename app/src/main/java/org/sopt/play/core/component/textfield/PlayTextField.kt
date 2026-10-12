@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.play.core.theme.PlaySoptTheme
@@ -76,6 +77,8 @@ fun PlayTextField(
                         text = placeholder,
                         color = PlaySoptTheme.colors.gray2,
                         style = PlaySoptTheme.typography.m18,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
                     )
                 }
                 innerTextField()
