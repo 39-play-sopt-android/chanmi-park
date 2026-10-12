@@ -1,5 +1,6 @@
 package org.sopt.play.core.theme
 
+import android.R.attr.letterSpacing
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.font.Font
@@ -7,6 +8,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 import org.sopt.play.R
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.em
 
 object PretendardFont {
     val Bold = FontFamily(Font(R.font.pretendard_bold))
@@ -15,7 +19,7 @@ object PretendardFont {
 }
 
 @Immutable
-class PlaySoptTypography(
+data class PlaySoptTypography(
     val b28: TextStyle,
     val m18: TextStyle,
     val sb16: TextStyle,
@@ -23,37 +27,39 @@ class PlaySoptTypography(
     val sb14: TextStyle,
 )
 
-val defaultPlaySoptTypography = PlaySoptTypography(
-    b28 = TextStyle(
-        fontFamily = PretendardFont.Bold,
-        fontSize = 28.sp,
-        lineHeight = 33.6.sp, // 120%
-        letterSpacing = (-0.28).sp, // -1%
-    ),
-    m18 = TextStyle(
-        fontFamily = PretendardFont.Medium,
-        fontSize = 18.sp,
-        lineHeight = 21.6.sp, // 120%
-        letterSpacing = (-0.18).sp, // -1%
-    ),
-    sb16 = TextStyle(
-        fontFamily = PretendardFont.SemiBold,
-        fontSize = 16.sp,
-        lineHeight = 19.2.sp, // 120%
-        letterSpacing = (-0.16).sp, // -1%
-    ),
-    m14 = TextStyle(
-        fontFamily = PretendardFont.Medium,
-        fontSize = 14.sp,
-        lineHeight = 16.8.sp, // 120%
-        letterSpacing = (-0.14).sp, // -1%
-    ),
-    sb14 = TextStyle(
-        fontFamily = PretendardFont.SemiBold,
-        fontSize = 14.sp,
-        lineHeight = 16.8.sp, // 120%
-        letterSpacing = (-0.14).sp, // -1%
-    ),
+private fun PlaySoptTextStyle(
+    fontFamily: FontFamily,
+    fontSize: TextUnit,
+): TextStyle = TextStyle(
+    fontFamily = fontFamily,
+    fontSize = fontSize,
+    lineHeight = 1.2.em,
+    letterSpacing = (-0.01.em),
+    lineHeightStyle = LineHeightStyle(
+        alignment = LineHeightStyle.Alignment.Center,
+        trim = LineHeightStyle.Trim.None,
+    )
 )
 
-val LocalPlaySoptTypographyProvider = staticCompositionLocalOf { defaultPlaySoptTypography }
+val defaultPlaySoptTypography = PlaySoptTypography(
+    b28 = PlaySoptTextStyle(
+        fontFamily = PretendardFont.Bold,
+        fontSize = 28.sp,
+    ),
+    m18 = PlaySoptTextStyle(
+        fontFamily = PretendardFont.Medium,
+        fontSize = 18.sp,
+    ),
+    sb16 = PlaySoptTextStyle(
+        fontFamily = PretendardFont.SemiBold,
+        fontSize = 16.sp,
+    ),
+    m14 = PlaySoptTextStyle(
+        fontFamily = PretendardFont.Medium,
+        fontSize = 14.sp,
+    ),
+    sb14 = PlaySoptTextStyle(
+        fontFamily = PretendardFont.SemiBold,
+        fontSize = 14.sp,
+    ),
+)

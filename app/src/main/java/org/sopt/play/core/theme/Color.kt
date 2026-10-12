@@ -2,7 +2,6 @@ package org.sopt.play.core.theme
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.material3.lightColorScheme
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 val Black = Color(0xFF121212)
@@ -14,12 +13,8 @@ val Gray6 = Color(0xFF23272A)
 val Red = Color(0xFFFF4D4D)
 val White = Color(0xFFFFFFFF)
 
-val PlayMaterialColorScheme = lightColorScheme(
-    background = White,
-)
-
 @Immutable
-class PlaySoptColors(
+data class PlaySoptColors(
     val black: Color,
     val gray1: Color,
     val gray2: Color,
@@ -41,5 +36,3 @@ val defaultPlaySoptColors = PlaySoptColors(
     red = Red,
     white = White,
 )
-
-val LocalPlaySoptColorsProvider = staticCompositionLocalOf { defaultPlaySoptColors }

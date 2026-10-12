@@ -1,24 +1,33 @@
 package org.sopt.play.core.theme
 
-import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+
+private val LocalPlaySoptColors = staticCompositionLocalOf { defaultPlaySoptColors }
+private val LocalPlaySoptTypography = staticCompositionLocalOf { defaultPlaySoptTypography }
+
+private val PlayMaterialColorScheme = lightColorScheme(
+    background = White,
+)
 
 object PlaySoptTheme {
     val colors: PlaySoptColors
         @Composable
         @ReadOnlyComposable
-        get() = LocalPlaySoptColorsProvider.current
+        get() = LocalPlaySoptColors.current
 
     val typography: PlaySoptTypography
         @Composable
         @ReadOnlyComposable
-        get() = LocalPlaySoptTypographyProvider.current
+        get() = LocalPlaySoptTypography.current
 }
 
 @Composable
@@ -28,8 +37,8 @@ private fun ProvidePlaySoptColorsAndTypography(
     content: @Composable () -> Unit
 ){
     CompositionLocalProvider(
-        LocalPlaySoptColorsProvider provides colors,
-        LocalPlaySoptTypographyProvider provides typography,
+        LocalPlaySoptColors provides colors,
+        LocalPlaySoptTypography provides typography,
         content = content
     )
 }
@@ -43,11 +52,11 @@ fun PlaySoptTheme(
         typography = defaultPlaySoptTypography,
     ) {
         val view = LocalView.current
-        if (!view.isInEditMode) {
-            SideEffect {
-                (view.context as Activity).window.run {
-                    WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
-                }
+        val activity = LocalActivity.current
+
+        SideEffect {
+            activity?.window?.let {
+                WindowCompat.getInsetsController(it, view).isAppearanceLightStatusBars = true
             }
         }
 
