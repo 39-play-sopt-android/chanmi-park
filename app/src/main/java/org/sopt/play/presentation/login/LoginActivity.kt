@@ -46,6 +46,8 @@ import org.sopt.play.core.theme.PlaySoptTheme
 import org.sopt.play.core.util.noRippleClickable
 import org.sopt.play.presentation.MainActivity
 import org.sopt.play.presentation.signup.SignUpActivity
+import org.sopt.play.presentation.signup.SignUpActivity.Companion.EMAIL_KEY
+import org.sopt.play.presentation.signup.SignUpActivity.Companion.PASSWORD_KEY
 import kotlin.jvm.java
 
 class LoginActivity : ComponentActivity() {
@@ -57,11 +59,8 @@ class LoginActivity : ComponentActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            registeredEmail =
-                result.data?.getStringExtra("email") ?: ""
-
-            registeredPassword =
-                result.data?.getStringExtra("password") ?: ""
+            registeredEmail = result.data?.getStringExtra(EMAIL_KEY) ?: ""
+            registeredPassword = result.data?.getStringExtra(PASSWORD_KEY) ?: ""
         }
     }
 
