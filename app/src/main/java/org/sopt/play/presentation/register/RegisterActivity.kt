@@ -1,4 +1,4 @@
-package org.sopt.play.presentation.signup
+package org.sopt.play.presentation.register
 
 import android.content.Intent
 import android.os.Bundle
@@ -41,7 +41,7 @@ import org.sopt.play.core.theme.PlaySoptTheme
 import org.sopt.play.presentation.login.LoginActivity
 import kotlin.jvm.java
 
-class SignUpActivity : ComponentActivity() {
+class RegisterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -53,8 +53,8 @@ class SignUpActivity : ComponentActivity() {
                 ) { innerPadding ->
                     val context = LocalContext.current
 
-                    SignUpScreen(
-                        onSignUpClick = { email, password ->
+                    RegisterScreen(
+                        onRegisterClick = { email, password ->
                             val resultIntent = Intent(context, LoginActivity::class.java).apply{
                                 putExtra(EMAIL_KEY,email)
                                 putExtra(PASSWORD_KEY,password)
@@ -77,8 +77,8 @@ class SignUpActivity : ComponentActivity() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun SignUpScreen(
-    onSignUpClick: (String, String) -> Unit,
+private fun RegisterScreen(
+    onRegisterClick: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val nameState = rememberTextFieldState(initialText = "")
@@ -169,7 +169,7 @@ private fun SignUpScreen(
 
         PlayButton(
             text = "회원가입",
-            onClick = { onSignUpClick(emailState.text.toString(), passwordState.text.toString()) },
+            onClick = { onRegisterClick(emailState.text.toString(), passwordState.text.toString()) },
             isEnabled = isNameValid && isEmailValid && isPasswordValid && isPasswordCheckValid,
         )
     }
@@ -177,10 +177,10 @@ private fun SignUpScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun GreetingPreview() {
+private fun RegisterScreenPreivew() {
     PlaySoptTheme {
-        SignUpScreen(
-            onSignUpClick = { _, _ -> }
+        RegisterScreen(
+            onRegisterClick = { _, _ -> }
         )
     }
 }

@@ -47,9 +47,9 @@ import org.sopt.play.core.component.textfield.PlayLabelTextField
 import org.sopt.play.core.theme.PlaySoptTheme
 import org.sopt.play.core.util.noRippleClickable
 import org.sopt.play.presentation.MainActivity
-import org.sopt.play.presentation.signup.SignUpActivity
-import org.sopt.play.presentation.signup.SignUpActivity.Companion.EMAIL_KEY
-import org.sopt.play.presentation.signup.SignUpActivity.Companion.PASSWORD_KEY
+import org.sopt.play.presentation.register.RegisterActivity
+import org.sopt.play.presentation.register.RegisterActivity.Companion.EMAIL_KEY
+import org.sopt.play.presentation.register.RegisterActivity.Companion.PASSWORD_KEY
 import kotlin.jvm.java
 
 class LoginActivity : ComponentActivity() {
@@ -57,7 +57,7 @@ class LoginActivity : ComponentActivity() {
     private var registeredEmail by mutableStateOf("")
     private var registeredPassword by mutableStateOf("")
 
-    private val signUpLauncher = registerForActivityResult(
+    private val registerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
@@ -85,9 +85,9 @@ class LoginActivity : ComponentActivity() {
                             }
                             else Toast.makeText(this, "이메일 또는 비밀번호가 올바르지 않아요.", Toast.LENGTH_SHORT).show()
                         },
-                        onSignupClick = {
-                            val intent = Intent(this, SignUpActivity::class.java)
-                            signUpLauncher.launch(intent)
+                        onRegisterClick = {
+                            val intent = Intent(this, RegisterActivity::class.java)
+                            registerLauncher.launch(intent)
                         },
                         modifier = Modifier.padding(innerPadding)
                     )
@@ -101,7 +101,7 @@ class LoginActivity : ComponentActivity() {
 @Composable
 private fun LoginScreen(
     onLoginClick: (String, String) -> Unit,
-    onSignupClick: () -> Unit,
+    onRegisterClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val emailState = rememberTextFieldState(initialText = "")
@@ -183,7 +183,7 @@ private fun LoginScreen(
 
             Text(
                 text = "회원가입하기",
-                modifier = Modifier.noRippleClickable( onClick = onSignupClick ),
+                modifier = Modifier.noRippleClickable( onClick = onRegisterClick ),
                 color = PlaySoptTheme.colors.gray6,
                 style = PlaySoptTheme.typography.m14,
             )
@@ -197,7 +197,7 @@ fun LoginScreenPreview() {
     PlaySoptTheme {
         LoginScreen(
             onLoginClick = { _ , _ -> } ,
-            onSignupClick = {},
+            onRegisterClick = {},
         )
     }
 }

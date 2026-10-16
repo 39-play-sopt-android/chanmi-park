@@ -12,9 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PlaySopt">
         <activity
-            android:name=".presentation.signup.SignUpActivity"
+            android:name=".presentation.register.RegisterActivity"
             android:exported="false"
-            android:label="@string/title_activity_sign_up"
+            android:label="@string/title_activity_register"
             android:theme="@style/Theme.PlaySopt"
             android:windowSoftInputMode="adjustResize"/>
         <activity
