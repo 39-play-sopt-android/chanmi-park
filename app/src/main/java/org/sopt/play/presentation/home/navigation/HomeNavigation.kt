@@ -20,6 +20,7 @@ fun NavGraphBuilder.homeGraph(
 ) {
     composable<Home> {
         HomeScreen(
+            onSearchClick = {},
             modifier = Modifier.padding(innerPadding),
         )
     }
