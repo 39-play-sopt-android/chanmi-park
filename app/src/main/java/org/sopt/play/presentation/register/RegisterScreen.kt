@@ -1,26 +1,18 @@
 package org.sopt.play.presentation.register
 
-import android.content.Intent
-import android.os.Bundle
 import android.util.Patterns
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -28,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -38,41 +29,20 @@ import androidx.compose.ui.unit.dp
 import org.sopt.play.core.component.button.PlayButton
 import org.sopt.play.core.component.textfield.PlayLabelTextField
 import org.sopt.play.core.theme.PlaySoptTheme
-import org.sopt.play.presentation.login.LoginActivity
-import kotlin.jvm.java
 
-class RegisterActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            PlaySoptTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    contentWindowInsets = WindowInsets.safeDrawing,
-                ) { innerPadding ->
-                    val context = LocalContext.current
-
-                    RegisterScreen(
-                        onRegisterClick = { email, password ->
-                            val resultIntent = Intent(context, LoginActivity::class.java).apply{
-                                putExtra(EMAIL_KEY,email)
-                                putExtra(PASSWORD_KEY,password)
-                            }
-                            setResult(RESULT_OK, resultIntent)
-                            finish()
-                        },
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
-    }
-
-    companion object {
-        const val EMAIL_KEY = "email"
-        const val PASSWORD_KEY = "password"
-    }
+@Composable
+fun RegisterRoute(
+    onRegister: (String, String) -> Unit,
+    navigateUp: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    RegisterScreen(
+        onRegisterClick = { email, password ->
+            onRegister(email, password)
+            navigateUp()
+        },
+        modifier = modifier,
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
