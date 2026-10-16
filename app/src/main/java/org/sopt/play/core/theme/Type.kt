@@ -16,6 +16,7 @@ object PretendardFont {
     val Bold = FontFamily(Font(R.font.pretendard_bold))
     val Medium = FontFamily(Font(R.font.pretendard_medium))
     val SemiBold = FontFamily(Font(R.font.pretendard_semibold))
+    val Regular = FontFamily(Font(R.font.pretendard_regular))
 }
 
 @Immutable
@@ -25,6 +26,7 @@ data class PlaySoptTypography(
     val sb16: TextStyle,
     val m14: TextStyle,
     val sb14: TextStyle,
+    val r14: TextStyle,
 )
 
 private fun PlaySoptTextStyle(
@@ -62,4 +64,8 @@ val defaultPlaySoptTypography = PlaySoptTypography(
         fontFamily = PretendardFont.SemiBold,
         fontSize = 14.sp,
     ),
+    r14 = PlaySoptTextStyle(
+        fontFamily = PretendardFont.Regular,
+        fontSize = 14.sp,
+    )
 )

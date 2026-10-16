@@ -1,41 +1,31 @@
 package org.sopt.play.presentation.login
 
-import android.content.Intent
-import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -46,62 +36,31 @@ import org.sopt.play.core.component.button.PlayButton
 import org.sopt.play.core.component.textfield.PlayLabelTextField
 import org.sopt.play.core.theme.PlaySoptTheme
 import org.sopt.play.core.util.noRippleClickable
-import org.sopt.play.presentation.MainActivity
-import org.sopt.play.presentation.signup.SignUpActivity
-import org.sopt.play.presentation.signup.SignUpActivity.Companion.EMAIL_KEY
-import org.sopt.play.presentation.signup.SignUpActivity.Companion.PASSWORD_KEY
-import kotlin.jvm.java
 
-class LoginActivity : ComponentActivity() {
+@Composable
+fun LoginRoute(
+    isRegisteredUser: (String, String) -> Boolean,
+    navigateToMain: () -> Unit,
+    navigateToRegister: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
 
-    private var registeredEmail by mutableStateOf("")
-    private var registeredPassword by mutableStateOf("")
-
-    private val signUpLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            registeredEmail = result.data?.getStringExtra(EMAIL_KEY) ?: ""
-            registeredPassword = result.data?.getStringExtra(PASSWORD_KEY) ?: ""
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            PlaySoptTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    contentWindowInsets = WindowInsets.safeDrawing,
-                ) { innerPadding ->
-
-                    LoginScreen(
-                        onLoginClick = {email, password ->
-                            if (email == registeredEmail && password == registeredPassword){
-                                val intent = Intent(this, MainActivity::class.java)
-                                startActivity(intent)
-                                finish()
-                            }
-                            else Toast.makeText(this, "이메일 또는 비밀번호가 올바르지 않아요.", Toast.LENGTH_SHORT).show()
-                        },
-                        onSignupClick = {
-                            val intent = Intent(this, SignUpActivity::class.java)
-                            signUpLauncher.launch(intent)
-                        },
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
-    }
+    LoginScreen(
+        onLoginClick = { email, password ->
+            if (isRegisteredUser(email, password)) navigateToMain()
+            else Toast.makeText(context, "이메일 또는 비밀번호가 올바르지 않아요.", Toast.LENGTH_SHORT).show()
+        },
+        onRegisterClick = navigateToRegister,
+        modifier = modifier,
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun LoginScreen(
     onLoginClick: (String, String) -> Unit,
-    onSignupClick: () -> Unit,
+    onRegisterClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val emailState = rememberTextFieldState(initialText = "")
@@ -183,7 +142,7 @@ private fun LoginScreen(
 
             Text(
                 text = "회원가입하기",
-                modifier = Modifier.noRippleClickable( onClick = onSignupClick ),
+                modifier = Modifier.noRippleClickable( onClick = onRegisterClick ),
                 color = PlaySoptTheme.colors.gray6,
                 style = PlaySoptTheme.typography.m14,
             )
@@ -193,11 +152,11 @@ private fun LoginScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
+private fun LoginScreenPreview() {
     PlaySoptTheme {
         LoginScreen(
             onLoginClick = { _ , _ -> } ,
-            onSignupClick = {},
+            onRegisterClick = {},
         )
     }
 }
