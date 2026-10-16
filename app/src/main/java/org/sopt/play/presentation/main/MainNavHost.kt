@@ -8,6 +8,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.navigation.compose.NavHost
 import org.sopt.play.presentation.heart.navigation.heartGraph
+import org.sopt.play.presentation.home.navigation.homeGraph
 import org.sopt.play.presentation.login.navigation.loginGraph
 import org.sopt.play.presentation.mypage.navigation.mypageGraph
 import org.sopt.play.presentation.register.navigation.registerGraph
@@ -41,6 +42,10 @@ fun MainNavHost(
                 registeredEmail = email
                 registeredPassword = password
             },
+        )
+
+        homeGraph(
+            innerPadding = innerPadding,
         )
 
         heartGraph(

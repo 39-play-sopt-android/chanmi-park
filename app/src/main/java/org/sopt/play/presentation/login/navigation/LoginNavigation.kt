@@ -10,7 +10,7 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 import org.sopt.play.core.navigation.Route
 import org.sopt.play.core.util.clearBackStackNavOptions
-import org.sopt.play.presentation.heart.navigation.navigateToHeart
+import org.sopt.play.presentation.home.navigation.navigateToHome
 import org.sopt.play.presentation.login.LoginRoute
 import org.sopt.play.presentation.register.navigation.navigateToRegister
 
@@ -27,7 +27,7 @@ fun NavGraphBuilder.loginGraph(
         LoginRoute(
             isRegisteredUser = isRegisteredUser,
             navigateToMain = {
-                navController.navigateToHeart(
+                navController.navigateToHome(
                     navOptions = navController.clearBackStackNavOptions()
                 )
             },

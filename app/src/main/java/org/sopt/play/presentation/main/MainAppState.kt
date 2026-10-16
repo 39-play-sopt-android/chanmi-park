@@ -12,6 +12,7 @@ import androidx.navigation.navOptions
 import org.sopt.play.core.navigation.MainTab
 import org.sopt.play.core.navigation.Route
 import org.sopt.play.presentation.heart.navigation.navigateToHeart
+import org.sopt.play.presentation.home.navigation.navigateToHome
 import org.sopt.play.presentation.login.navigation.Login
 import org.sopt.play.presentation.mypage.navigation.navigateToMypage
 
@@ -39,6 +40,7 @@ class MainAppState(
         }
 
         when (tab) {
+            MainTab.HOME -> navController.navigateToHome(navOptions = navOptions)
             MainTab.HEART -> navController.navigateToHeart(navOptions = navOptions)
             MainTab.MYPAGE -> navController.navigateToMypage(navOptions = navOptions)
         }
