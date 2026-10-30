@@ -12,15 +12,15 @@ import androidx.navigation.navOptions
 import org.sopt.play.core.navigation.MainTab
 import org.sopt.play.core.navigation.Route
 import org.sopt.play.presentation.heart.navigation.navigateToHeart
+import org.sopt.play.presentation.home.navigation.Home
 import org.sopt.play.presentation.home.navigation.navigateToHome
-import org.sopt.play.presentation.login.navigation.Login
 import org.sopt.play.presentation.mypage.navigation.navigateToMypage
 
 @Stable
 class MainAppState(
     val navController: NavHostController,
 ) {
-    val startDestination: Route = Login
+    val startDestination: Route = Home
 
     val currentTab: MainTab?
         @Composable get() {
