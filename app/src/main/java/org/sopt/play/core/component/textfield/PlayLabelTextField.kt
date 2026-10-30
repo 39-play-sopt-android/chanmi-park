@@ -8,15 +8,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.InputTransformation
-import androidx.compose.foundation.text.input.KeyboardActionHandler
-import androidx.compose.foundation.text.input.OutputTransformation
-import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.play.core.theme.PlaySoptTheme
@@ -25,13 +22,13 @@ import org.sopt.play.core.theme.PlaySoptTheme
 fun PlayLabelTextField(
     labelText: String,
     placeholder: String,
-    state: TextFieldState,
+    value: String,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     errorMessage: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    onKeyboardAction: KeyboardActionHandler? = null,
-    inputTransformation: InputTransformation? = null,
-    outputTransformation: OutputTransformation? = null,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource? = null,
 ){
     Column(
@@ -46,13 +43,13 @@ fun PlayLabelTextField(
         )
 
         PlayTextField(
-            state = state,
+            value = value,
+            onValueChange = onValueChange,
             placeholder = placeholder,
             isError = !errorMessage.isNullOrBlank(),
             keyboardOptions = keyboardOptions,
-            onKeyboardAction = onKeyboardAction,
-            inputTransformation = inputTransformation,
-            outputTransformation = outputTransformation,
+            keyboardActions = keyboardActions,
+            visualTransformation = visualTransformation,
             interactionSource = interactionSource,
         )
 
@@ -75,13 +72,12 @@ fun PlayLabelTextField(
 @Preview(showBackground = true)
 @Composable
 private fun PlayLabelTextFieldPreview(){
-    val state = rememberTextFieldState(initialText = "")
-
     PlaySoptTheme{
         PlayLabelTextField(
             labelText = "이메일 주소",
             placeholder = "abc@email.com",
-            state = state,
+            value = "",
+            onValueChange = {},
         )
     }
 }

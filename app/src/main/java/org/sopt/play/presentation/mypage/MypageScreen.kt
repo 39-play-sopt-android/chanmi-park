@@ -9,10 +9,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.play.core.theme.PlaySoptTheme
 
 @Composable
-fun MypageScreen(
+fun MypageRoute(
+    modifier: Modifier = Modifier,
+    viewModel: MypageViewModel = viewModel(),
+) {
+    MypageScreen(
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun MypageScreen(
     modifier: Modifier = Modifier
 ){
     Text(

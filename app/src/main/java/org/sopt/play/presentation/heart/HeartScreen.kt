@@ -9,10 +9,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.play.core.theme.PlaySoptTheme
 
 @Composable
-fun HeartScreen(
+fun HeartRoute(
+    modifier: Modifier = Modifier,
+    viewModel: HeartViewModel = viewModel(),
+) {
+    HeartScreen(
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun HeartScreen(
     modifier: Modifier = Modifier
 ){
     Text(
