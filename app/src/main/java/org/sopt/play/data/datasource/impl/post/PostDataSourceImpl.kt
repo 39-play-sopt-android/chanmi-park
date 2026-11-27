@@ -17,4 +17,8 @@ class PostDataSourceImpl @Inject constructor(
     override suspend fun createPost(
         request: CreatePostRequestDto,
     ) = postService.createPost(request)
+
+    override suspend fun deletePost(
+        postId: Long,
+    ) = postService.deletePost(postId)
 }

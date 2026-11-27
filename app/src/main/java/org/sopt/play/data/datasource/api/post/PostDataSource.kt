@@ -15,4 +15,8 @@ interface PostDataSource {
     suspend fun createPost(
         request: CreatePostRequestDto,
     ): BaseResponse<PostDto>
+
+    suspend fun deletePost(
+        postId: Long,
+    ): BaseResponse<Unit>
 }

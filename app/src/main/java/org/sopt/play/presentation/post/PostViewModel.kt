@@ -69,6 +69,27 @@ class PostViewModel @Inject constructor(
         }
     }
 
+    fun onPostLongClick(postId: Long) {
+        _uiState.update { it.copy(deletePostId = postId) }
+    }
+
+    fun onDeleteModalDismiss() {
+        _uiState.update { it.copy(deletePostId = null) }
+    }
+
+    fun deletePost(
+        onFailure: (String) -> Unit,
+    ) {
+        val postId = _uiState.value.deletePostId ?: return
+        onDeleteModalDismiss()
+
+        viewModelScope.launch {
+            postRepository.deletePost(postId)
+                .onSuccess { getPosts() }
+                .onFailure { onFailure(it.message.orEmpty()) }
+        }
+    }
+
     private fun getPosts() {
         viewModelScope.launch {
             postRepository.getPosts(keyword = null, cursor = null, size = null)

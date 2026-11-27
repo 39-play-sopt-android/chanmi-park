@@ -1,6 +1,7 @@
 package org.sopt.play.presentation.post.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.play.core.theme.PlaySoptTheme
@@ -24,11 +26,15 @@ fun PostCard(
     date: String,
     title: String,
     content: String,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .pointerInput(onLongClick) {
+                detectTapGestures(onLongPress = { onLongClick() })
+            }
             .background(color = PlaySoptTheme.colors.gray1, shape = RoundedCornerShape(20.dp))
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -88,6 +94,7 @@ private fun PostCardPreview() {
                 date = "2026.10.24",
                 title = "글쓰기 테스트입니다 하하하하",
                 content = "본문입니다. 본문입니다. 본문입니다. 본문입니다. 본문입니다. 본문입니다. 본문입니다. 본문입니다. 본문입니다. 본문입니다. 본문입니다. 본문입니다. 본문입니다.",
+                onLongClick = {},
             )
 
             PostCard(
@@ -95,6 +102,7 @@ private fun PostCardPreview() {
                 date = "2026.10.19",
                 title = "웹토리들아",
                 content = "세미나 열심히 듣고 있나요? 파이띵!ㅋㅋ",
+                onLongClick = {},
             )
         }
     }

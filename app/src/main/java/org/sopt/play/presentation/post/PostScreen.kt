@@ -25,6 +25,7 @@ import org.sopt.play.data.model.post.PostModel
 import org.sopt.play.presentation.post.component.PostBottomSheet
 import org.sopt.play.presentation.post.component.PostCard
 import org.sopt.play.presentation.post.component.PostFloatingButton
+import org.sopt.play.presentation.post.component.PostModal
 import org.sopt.play.presentation.post.component.PostSearchTextField
 
 @Composable
@@ -50,6 +51,15 @@ fun PostRoute(
             )
         },
         onBottomSheetDismiss = viewModel::onBottomSheetDismiss,
+        onPostLongClick = viewModel::onPostLongClick,
+        onDeleteClick = {
+            viewModel.deletePost(
+                onFailure = { message ->
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                },
+            )
+        },
+        onDeleteModalDismiss = viewModel::onDeleteModalDismiss,
         modifier = modifier,
     )
 }
@@ -64,6 +74,9 @@ private fun PostScreen(
     onContentChange: (String) -> Unit,
     onCompleteClick: () -> Unit,
     onBottomSheetDismiss: () -> Unit,
+    onPostLongClick: (Long) -> Unit,
+    onDeleteClick: () -> Unit,
+    onDeleteModalDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ){
     Box(
@@ -95,6 +108,7 @@ private fun PostScreen(
                     date = post.createdAt,
                     title = post.title,
                     content = post.content,
+                    onLongClick = { onPostLongClick(post.id) },
                     modifier = Modifier.padding(horizontal = 16.dp),
                 )
 
@@ -118,6 +132,13 @@ private fun PostScreen(
             onContentChange = onContentChange,
             onCompleteClick = onCompleteClick,
             onDismissRequest = onBottomSheetDismiss,
+        )
+    }
+
+    if (uiState.deletePostId != null) {
+        PostModal(
+            onDeleteClick = onDeleteClick,
+            onDismissRequest = onDeleteModalDismiss,
         )
     }
 }
@@ -152,6 +173,9 @@ private fun PostScreenPreview() {
             onContentChange = {},
             onCompleteClick = {},
             onBottomSheetDismiss = {},
+            onPostLongClick = {},
+            onDeleteClick = {},
+            onDeleteModalDismiss = {},
         )
     }
 }

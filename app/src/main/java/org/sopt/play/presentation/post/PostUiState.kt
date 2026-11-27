@@ -10,4 +10,5 @@ data class PostUiState(
     val isBottomSheetVisible: Boolean = false,
     val title: String = "",
     val content: String = "",
+    val deletePostId: Long? = null,
 )
