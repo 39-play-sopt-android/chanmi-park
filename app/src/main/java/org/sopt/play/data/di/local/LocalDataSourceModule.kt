@@ -4,7 +4,9 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import org.sopt.play.data.local.datasource.api.LocalTokenDataSource
 import org.sopt.play.data.local.datasource.api.LocalUserDataSource
+import org.sopt.play.data.local.datasource.impl.LocalTokenDataSourceImpl
 import org.sopt.play.data.local.datasource.impl.LocalUserDataSourceImpl
 import javax.inject.Singleton
 
@@ -16,4 +18,10 @@ abstract class LocalDataSourceModule {
     abstract fun bindLocalUserDataSource(
         localUserDataSourceImpl: LocalUserDataSourceImpl
     ): LocalUserDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindLocalTokenDataSource(
+        localTokenDataSourceImpl: LocalTokenDataSourceImpl
+    ): LocalTokenDataSource
 }
