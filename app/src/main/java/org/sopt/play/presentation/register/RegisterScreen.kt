@@ -1,7 +1,5 @@
 package org.sopt.play.presentation.register
 
-import android.util.Patterns
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,23 +7,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.OutputTransformation
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.play.core.component.button.PlayButton
 import org.sopt.play.core.component.textfield.PlayLabelTextField
 import org.sopt.play.core.theme.PlaySoptTheme
@@ -35,32 +33,34 @@ fun RegisterRoute(
     onRegister: (String, String) -> Unit,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: RegisterViewModel = viewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     RegisterScreen(
-        onRegisterClick = { email, password ->
-            onRegister(email, password)
+        uiState = uiState,
+        onNameChange = viewModel::onNameChange,
+        onEmailChange = viewModel::onEmailChange,
+        onPasswordChange = viewModel::onPasswordChange,
+        onPasswordCheckChange = viewModel::onPasswordCheckChange,
+        onRegisterClick = {
+            viewModel.register(onRegister)
             navigateUp()
         },
         modifier = modifier,
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun RegisterScreen(
-    onRegisterClick: (String, String) -> Unit,
+    uiState: RegisterUiState,
+    onNameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onPasswordCheckChange: (String) -> Unit,
+    onRegisterClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val nameState = rememberTextFieldState(initialText = "")
-    val emailState = rememberTextFieldState(initialText = "")
-    val passwordState = rememberTextFieldState(initialText = "")
-    val passwordCheckState = rememberTextFieldState(initialText = "")
-
-    val isNameValid by remember { derivedStateOf { nameState.text.isNotBlank() } }
-    val isEmailValid by remember { derivedStateOf { Patterns.EMAIL_ADDRESS.matcher(emailState.text).matches() } }
-    val isPasswordValid by remember { derivedStateOf { passwordState.text.length >= 6 } }
-    val isPasswordCheckValid by remember { derivedStateOf { passwordState.text == passwordCheckState.text } }
-
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -83,9 +83,10 @@ private fun RegisterScreen(
         PlayLabelTextField(
             labelText = "이름",
             placeholder ="홍길동",
-            state = nameState,
+            value = uiState.name,
+            onValueChange = onNameChange,
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-            onKeyboardAction = { focusManager.moveFocus(FocusDirection.Next) },
+            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -93,13 +94,14 @@ private fun RegisterScreen(
         PlayLabelTextField(
             labelText = "이메일 주소",
             placeholder ="abc@email.com",
-            state = emailState,
-            errorMessage = if(emailState.text.isNotEmpty() && !isEmailValid) "올바른 이메일을 입력해주세요." else null,
+            value = uiState.email,
+            onValueChange = onEmailChange,
+            errorMessage = if(uiState.email.isNotEmpty() && !uiState.isEmailValid) "올바른 이메일을 입력해주세요." else null,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
             ),
-            onKeyboardAction = { focusManager.moveFocus(FocusDirection.Next) },
+            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -107,14 +109,15 @@ private fun RegisterScreen(
         PlayLabelTextField(
             labelText = "비밀번호",
             placeholder ="6자 이상의 비밀번호",
-            state = passwordState,
-            errorMessage = if(passwordState.text.isNotEmpty() && !isPasswordValid) "비밀번호는 6자 이상 입력해주세요." else null,
-            outputTransformation = OutputTransformation { replace(0, length, "•".repeat(length)) },
+            value = uiState.password,
+            onValueChange = onPasswordChange,
+            errorMessage = if(uiState.password.isNotEmpty() && !uiState.isPasswordValid) "비밀번호는 6자 이상 입력해주세요." else null,
+            visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Next,
             ),
-            onKeyboardAction = { focusManager.moveFocus(FocusDirection.Next) },
+            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -122,25 +125,28 @@ private fun RegisterScreen(
         PlayLabelTextField(
             labelText = "비밀번호 확인",
             placeholder ="6자 이상의 비밀번호",
-            state = passwordCheckState,
-            errorMessage = if(passwordCheckState.text.isNotEmpty() && !isPasswordCheckValid) "비밀번호와 동일하게 입력해주세요." else null,
-            outputTransformation = OutputTransformation { replace(0, length, "•".repeat(length)) },
+            value = uiState.passwordCheck,
+            onValueChange = onPasswordCheckChange,
+            errorMessage = if(uiState.passwordCheck.isNotEmpty() && !uiState.isPasswordCheckValid) "비밀번호와 동일하게 입력해주세요." else null,
+            visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,
             ),
-            onKeyboardAction = {
-                focusManager.clearFocus()
-                keyboardController?.hide()
-            },
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                },
+            ),
         )
 
         Spacer(modifier = Modifier.height(40.dp))
 
         PlayButton(
             text = "회원가입",
-            onClick = { onRegisterClick(emailState.text.toString(), passwordState.text.toString()) },
-            isEnabled = isNameValid && isEmailValid && isPasswordValid && isPasswordCheckValid,
+            onClick = onRegisterClick,
+            isEnabled = uiState.isRegisterEnabled,
         )
     }
 }
@@ -150,7 +156,12 @@ private fun RegisterScreen(
 private fun RegisterScreenPreivew() {
     PlaySoptTheme {
         RegisterScreen(
-            onRegisterClick = { _, _ -> }
+            uiState = RegisterUiState(),
+            onNameChange = {},
+            onEmailChange = {},
+            onPasswordChange = {},
+            onPasswordCheckChange = {},
+            onRegisterClick = {},
         )
     }
 }

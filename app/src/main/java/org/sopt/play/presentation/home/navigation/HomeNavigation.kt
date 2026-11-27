@@ -9,7 +9,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 import org.sopt.play.core.navigation.MainTabRoute
-import org.sopt.play.presentation.home.HomeScreen
+import org.sopt.play.presentation.home.HomeRoute
 
 fun NavController.navigateToHome(
     navOptions: NavOptions? = null,
@@ -19,7 +19,7 @@ fun NavGraphBuilder.homeGraph(
     innerPadding: PaddingValues,
 ) {
     composable<Home> {
-        HomeScreen(
+        HomeRoute(
             onSearchClick = {},
             modifier = Modifier.padding(innerPadding),
         )

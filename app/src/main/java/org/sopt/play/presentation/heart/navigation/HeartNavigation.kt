@@ -9,7 +9,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 import org.sopt.play.core.navigation.MainTabRoute
-import org.sopt.play.presentation.heart.HeartScreen
+import org.sopt.play.presentation.heart.HeartRoute
 
 fun NavController.navigateToHeart(
     navOptions: NavOptions? = null,
@@ -19,7 +19,7 @@ fun NavGraphBuilder.heartGraph(
     innerPadding: PaddingValues,
 ) {
     composable<Heart> {
-        HeartScreen(
+        HeartRoute(
             modifier = Modifier.padding(innerPadding),
         )
     }

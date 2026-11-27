@@ -9,7 +9,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 import org.sopt.play.core.navigation.MainTabRoute
-import org.sopt.play.presentation.mypage.MypageScreen
+import org.sopt.play.presentation.mypage.MypageRoute
 
 fun NavController.navigateToMypage(
     navOptions: NavOptions? = null,
@@ -19,7 +19,7 @@ fun NavGraphBuilder.mypageGraph(
     innerPadding: PaddingValues,
 ) {
     composable<Mypage> {
-        MypageScreen(
+        MypageRoute(
             modifier = Modifier.padding(innerPadding),
         )
     }
