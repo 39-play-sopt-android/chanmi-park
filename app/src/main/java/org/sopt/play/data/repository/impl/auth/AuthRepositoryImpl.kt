@@ -18,6 +18,9 @@ class AuthRepositoryImpl @Inject constructor(
         localTokenDataSource.setAuthorizationCode(data.authorizationCode)
     }
 
+    override suspend fun hasAuthorizationCode(): Boolean =
+        !localTokenDataSource.getAuthorizationCode().isNullOrBlank()
+
     companion object {
         private const val PART = "ANDROID"
     }
