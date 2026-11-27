@@ -16,17 +16,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.collections.immutable.persistentListOf
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.sopt.play.core.theme.PlaySoptTheme
+import org.sopt.play.data.model.post.PostModel
 import org.sopt.play.presentation.post.component.PostCard
 import org.sopt.play.presentation.post.component.PostFloatingButton
 import org.sopt.play.presentation.post.component.PostSearchTextField
-import org.sopt.play.presentation.post.model.dummyPosts
 
 @Composable
 fun PostRoute(
     modifier: Modifier = Modifier,
-    viewModel: PostViewModel = viewModel(),
+    viewModel: PostViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -73,7 +74,7 @@ private fun PostScreen(
             ) { post ->
                 PostCard(
                     author = post.author,
-                    date = post.date,
+                    date = post.createdAt,
                     title = post.title,
                     content = post.content,
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -97,7 +98,24 @@ private fun PostScreen(
 private fun PostScreenPreview() {
     PlaySoptTheme{
         PostScreen(
-            uiState = PostUiState(posts = dummyPosts),
+            uiState = PostUiState(
+                posts = persistentListOf(
+                    PostModel(
+                        id = 1,
+                        author = "민나",
+                        createdAt = "2026.10.19",
+                        title = "웹토리들아",
+                        content = "세미나 열심히 듣고 있나요? 파이띵!ㅋㅋ",
+                    ),
+                    PostModel(
+                        id = 2,
+                        author = "상엽",
+                        createdAt = "2026.10.06",
+                        title = "모아요들아",
+                        content = "사과 잊지 말고 항상 가지고 다녀라",
+                    ),
+                ),
+            ),
             onSearchQueryChange = {},
             onSearchClick = {},
             onWriteClick = {},
