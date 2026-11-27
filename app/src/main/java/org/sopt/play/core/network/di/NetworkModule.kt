@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.sopt.play.BuildConfig
 import org.sopt.play.BuildConfig.BASE_URL
+import org.sopt.play.core.network.AuthInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import javax.inject.Singleton
@@ -47,7 +48,9 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(
         loggingInterceptor: Interceptor,
+        authInterceptor: AuthInterceptor,
     ): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(authInterceptor)
         .addInterceptor(loggingInterceptor)
         .build()
 
