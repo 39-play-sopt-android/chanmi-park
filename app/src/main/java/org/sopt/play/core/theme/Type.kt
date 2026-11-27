@@ -24,9 +24,11 @@ data class PlaySoptTypography(
     val b28: TextStyle,
     val m18: TextStyle,
     val sb16: TextStyle,
+    val m16: TextStyle,
     val m14: TextStyle,
     val sb14: TextStyle,
     val r14: TextStyle,
+    val m12: TextStyle,
 )
 
 private fun PlaySoptTextStyle(
@@ -56,6 +58,10 @@ val defaultPlaySoptTypography = PlaySoptTypography(
         fontFamily = PretendardFont.SemiBold,
         fontSize = 16.sp,
     ),
+    m16 = PlaySoptTextStyle(
+        fontFamily = PretendardFont.Medium,
+        fontSize = 16.sp,
+    ),
     m14 = PlaySoptTextStyle(
         fontFamily = PretendardFont.Medium,
         fontSize = 14.sp,
@@ -67,5 +73,9 @@ val defaultPlaySoptTypography = PlaySoptTypography(
     r14 = PlaySoptTextStyle(
         fontFamily = PretendardFont.Regular,
         fontSize = 14.sp,
-    )
+    ),
+    m12 = PlaySoptTextStyle(
+        fontFamily = PretendardFont.Medium,
+        fontSize = 12.sp,
+    ),
 )
