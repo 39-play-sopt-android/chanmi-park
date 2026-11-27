@@ -23,7 +23,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.sopt.play.core.component.button.PlayButton
 import org.sopt.play.core.component.textfield.PlayLabelTextField
 import org.sopt.play.core.theme.PlaySoptTheme
@@ -33,7 +33,7 @@ fun RegisterRoute(
     onRegister: (String, String) -> Unit,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: RegisterViewModel = viewModel(),
+    viewModel: RegisterViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -44,8 +44,10 @@ fun RegisterRoute(
         onPasswordChange = viewModel::onPasswordChange,
         onPasswordCheckChange = viewModel::onPasswordCheckChange,
         onRegisterClick = {
-            viewModel.register(onRegister)
-            navigateUp()
+            viewModel.register(
+                onRegister = onRegister,
+                onComplete = navigateUp,
+            )
         },
         modifier = modifier,
     )

@@ -29,7 +29,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.sopt.play.core.component.button.PlayButton
 import org.sopt.play.core.component.textfield.PlayLabelTextField
 import org.sopt.play.core.theme.PlaySoptTheme
@@ -41,7 +41,7 @@ fun LoginRoute(
     navigateToMain: () -> Unit,
     navigateToRegister: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = viewModel(),
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -51,8 +51,13 @@ fun LoginRoute(
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onLoginClick = {
-            if (viewModel.login(isRegisteredUser)) navigateToMain()
-            else Toast.makeText(context, "이메일 또는 비밀번호가 올바르지 않아요.", Toast.LENGTH_SHORT).show()
+            viewModel.login(
+                isRegisteredUser = isRegisteredUser,
+                onSuccess = navigateToMain,
+                onFailure = { message ->
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                },
+            )
         },
         onRegisterClick = navigateToRegister,
         modifier = modifier,

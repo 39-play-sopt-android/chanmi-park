@@ -12,16 +12,14 @@ import androidx.navigation.navOptions
 import org.sopt.play.core.navigation.MainTab
 import org.sopt.play.core.navigation.Route
 import org.sopt.play.presentation.heart.navigation.navigateToHeart
-import org.sopt.play.presentation.home.navigation.Home
 import org.sopt.play.presentation.home.navigation.navigateToHome
 import org.sopt.play.presentation.mypage.navigation.navigateToMypage
 
 @Stable
 class MainAppState(
     val navController: NavHostController,
+    val startDestination: Route,
 ) {
-    val startDestination: Route = Home
-
     val currentTab: MainTab?
         @Composable get() {
             val currentBackStackEntry by navController.currentBackStackEntryAsState()
@@ -49,7 +47,11 @@ class MainAppState(
 
 @Composable
 fun rememberMainAppState(
+    startDestination: Route,
     navController: NavHostController = rememberNavController(),
-): MainAppState = remember(navController) {
-    MainAppState(navController)
+): MainAppState = remember(navController, startDestination) {
+    MainAppState(
+        navController = navController,
+        startDestination = startDestination,
+    )
 }
