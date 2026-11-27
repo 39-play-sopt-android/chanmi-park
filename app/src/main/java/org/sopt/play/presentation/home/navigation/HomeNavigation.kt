@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 import org.sopt.play.core.navigation.MainTabRoute
 import org.sopt.play.presentation.home.HomeRoute
+import org.sopt.play.presentation.post.navigation.navigateToPost
 
 fun NavController.navigateToHome(
     navOptions: NavOptions? = null,
@@ -17,10 +18,11 @@ fun NavController.navigateToHome(
 
 fun NavGraphBuilder.homeGraph(
     innerPadding: PaddingValues,
+    navController: NavController,
 ) {
     composable<Home> {
         HomeRoute(
-            onSearchClick = {},
+            onSearchClick = { navController.navigateToPost() },
             modifier = Modifier.padding(innerPadding),
         )
     }
