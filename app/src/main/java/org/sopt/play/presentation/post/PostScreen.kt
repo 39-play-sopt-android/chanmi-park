@@ -20,6 +20,7 @@ import kotlinx.collections.immutable.persistentListOf
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.sopt.play.core.theme.PlaySoptTheme
 import org.sopt.play.data.model.post.PostModel
+import org.sopt.play.presentation.post.component.PostBottomSheet
 import org.sopt.play.presentation.post.component.PostCard
 import org.sopt.play.presentation.post.component.PostFloatingButton
 import org.sopt.play.presentation.post.component.PostSearchTextField
@@ -35,7 +36,11 @@ fun PostRoute(
         uiState = uiState,
         onSearchQueryChange = viewModel::onSearchQueryChange,
         onSearchClick = {},
-        onWriteClick = {},
+        onWriteClick = viewModel::onWriteClick,
+        onTitleChange = viewModel::onTitleChange,
+        onContentChange = viewModel::onContentChange,
+        onCompleteClick = viewModel::onBottomSheetDismiss,
+        onBottomSheetDismiss = viewModel::onBottomSheetDismiss,
         modifier = modifier,
     )
 }
@@ -46,6 +51,10 @@ private fun PostScreen(
     onSearchQueryChange: (String) -> Unit,
     onSearchClick: () -> Unit,
     onWriteClick: () -> Unit,
+    onTitleChange: (String) -> Unit,
+    onContentChange: (String) -> Unit,
+    onCompleteClick: () -> Unit,
+    onBottomSheetDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ){
     Box(
@@ -91,6 +100,17 @@ private fun PostScreen(
                 .padding(end = 16.dp, bottom = 20.dp),
         )
     }
+
+    if (uiState.isBottomSheetVisible) {
+        PostBottomSheet(
+            title = uiState.title,
+            onTitleChange = onTitleChange,
+            content = uiState.content,
+            onContentChange = onContentChange,
+            onCompleteClick = onCompleteClick,
+            onDismissRequest = onBottomSheetDismiss,
+        )
+    }
 }
 
 @Preview
@@ -119,6 +139,10 @@ private fun PostScreenPreview() {
             onSearchQueryChange = {},
             onSearchClick = {},
             onWriteClick = {},
+            onTitleChange = {},
+            onContentChange = {},
+            onCompleteClick = {},
+            onBottomSheetDismiss = {},
         )
     }
 }

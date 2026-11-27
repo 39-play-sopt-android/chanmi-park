@@ -28,6 +28,28 @@ class PostViewModel @Inject constructor(
         _uiState.update { it.copy(searchQuery = searchQuery) }
     }
 
+    fun onWriteClick() {
+        _uiState.update { it.copy(isBottomSheetVisible = true) }
+    }
+
+    fun onTitleChange(title: String) {
+        _uiState.update { it.copy(title = title) }
+    }
+
+    fun onContentChange(content: String) {
+        _uiState.update { it.copy(content = content) }
+    }
+
+    fun onBottomSheetDismiss() {
+        _uiState.update {
+            it.copy(
+                isBottomSheetVisible = false,
+                title = "",
+                content = "",
+            )
+        }
+    }
+
     private fun getPosts() {
         viewModelScope.launch {
             postRepository.getPosts(keyword = null, cursor = null, size = null)
