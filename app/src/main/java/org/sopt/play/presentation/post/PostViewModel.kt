@@ -11,11 +11,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.sopt.play.data.repository.api.post.PostRepository
+import org.sopt.play.data.repository.api.user.UserRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
     private val postRepository: PostRepository,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(PostUiState())
     val uiState: StateFlow<PostUiState> = _uiState.asStateFlow()
@@ -47,6 +49,23 @@ class PostViewModel @Inject constructor(
                 title = "",
                 content = "",
             )
+        }
+    }
+
+    fun createPost(
+        onFailure: (String) -> Unit,
+    ) {
+        val state = _uiState.value
+        onBottomSheetDismiss()
+
+        viewModelScope.launch {
+            postRepository.createPost(
+                title = state.title,
+                content = state.content,
+                author = userRepository.getNickname().orEmpty(),
+            )
+                .onSuccess { getPosts() }
+                .onFailure { onFailure(it.message.orEmpty()) }
         }
     }
 

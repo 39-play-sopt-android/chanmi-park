@@ -4,6 +4,7 @@ import org.sopt.play.core.util.suspendRunCatching
 import org.sopt.play.data.mapper.post.toModel
 import org.sopt.play.data.model.post.PostListModel
 import org.sopt.play.data.datasource.api.post.PostDataSource
+import org.sopt.play.data.dto.post.CreatePostRequestDto
 import org.sopt.play.data.repository.api.post.PostRepository
 import javax.inject.Inject
 
@@ -18,5 +19,19 @@ class PostRepositoryImpl @Inject constructor(
         val data = postDataSource.getPosts(keyword, cursor, size).data
             ?: throw IllegalStateException("data is null")
         data.toModel()
+    }
+
+    override suspend fun createPost(
+        title: String,
+        content: String,
+        author: String,
+    ): Result<Unit> = suspendRunCatching {
+        postDataSource.createPost(
+            CreatePostRequestDto(
+                title = title,
+                content = content,
+                author = author,
+            ),
+        )
     }
 }

@@ -8,4 +8,10 @@ interface PostRepository {
         cursor: Long?,
         size: Int?,
     ): Result<PostListModel>
+
+    suspend fun createPost(
+        title: String,
+        content: String,
+        author: String,
+    ): Result<Unit>
 }

@@ -1,8 +1,12 @@
 package org.sopt.play.data.service
 
 import org.sopt.play.data.dto.BaseResponse
+import org.sopt.play.data.dto.post.CreatePostRequestDto
+import org.sopt.play.data.dto.post.PostDto
 import org.sopt.play.data.dto.post.PostListResponseDto
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface PostService {
@@ -12,4 +16,9 @@ interface PostService {
         @Query("cursor") cursor: Long? = null,
         @Query("size") size: Int? = null,
     ): BaseResponse<PostListResponseDto>
+
+    @POST("api/v1/posts")
+    suspend fun createPost(
+        @Body request: CreatePostRequestDto,
+    ): BaseResponse<PostDto>
 }
