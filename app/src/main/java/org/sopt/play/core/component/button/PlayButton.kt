@@ -21,19 +21,36 @@ fun PlayButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
+    type: PlayButtonType = PlayButtonType.PRIMARY,
 ) {
+    val backgroundColor = when {
+        !isEnabled -> PlaySoptTheme.colors.gray1
+        type == PlayButtonType.PRIMARY -> PlaySoptTheme.colors.black
+        else -> PlaySoptTheme.colors.gray1
+    }
+    val textColor = when {
+        !isEnabled -> PlaySoptTheme.colors.gray3
+        type == PlayButtonType.PRIMARY -> PlaySoptTheme.colors.gray1
+        else -> PlaySoptTheme.colors.gray5
+    }
+
     Text(
         text = text,
         modifier = modifier
             .fillMaxWidth()
             .clip(shape = CircleShape)
-            .background(color = if (isEnabled) PlaySoptTheme.colors.black else PlaySoptTheme.colors.gray1)
+            .background(color = backgroundColor)
             .noRippleClickable(enabled = isEnabled, onClick = onClick)
             .padding(all = 16.dp),
-        color = if (isEnabled) PlaySoptTheme.colors.gray1 else PlaySoptTheme.colors.gray3,
+        color = textColor,
         style = PlaySoptTheme.typography.sb14,
         textAlign = TextAlign.Center
     )
+}
+
+enum class PlayButtonType {
+    PRIMARY,
+    SECONDARY,
 }
 
 @Preview(showBackground = true)
@@ -50,6 +67,12 @@ private fun PlayButtonPreview() {
             text = "로그인",
             onClick = {},
             isEnabled = false
+        )
+
+        PlayButton(
+            text = "취소",
+            onClick = {},
+            type = PlayButtonType.SECONDARY
         )
     }
 }
